@@ -9,7 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,7 +39,7 @@ import androidx.navigation.NavController
 
 
 fun checkCred(email: String, password: String, navController: NavController, context: android.content.Context) {
-    if (email == "mujtaba" && password == "") {
+    if (email == "mujtabakhalid20@gmail.com" && password == "12345678") {
         navController.navigate("MapScreen")
     } else {
         Toast.makeText(context, "Incorrect email or password", Toast.LENGTH_SHORT).apply {
@@ -48,6 +57,8 @@ fun Login(navController: NavController) {
     var password by remember {
         mutableStateOf("")
     }
+
+    var passwordVisible by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     Scaffold(
@@ -86,7 +97,24 @@ fun Login(navController: NavController) {
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("Password") },
-                    modifier = Modifier.fillMaxWidth()
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Password") },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        val image = if (passwordVisible)
+                            Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
+
+                        // Localized description for accessibility services
+                        val description = if (passwordVisible) "Hide password" else "Show password"
+
+                        // Toggle button to hide or display password
+                        IconButton(onClick = {passwordVisible = !passwordVisible}){
+                            Icon(imageVector  = image, description)
+                        }
+                    }
                 )
                 Text("Forgot Password?" , color = Color.Blue, modifier = Modifier.padding(top = 10.dp))
             }
